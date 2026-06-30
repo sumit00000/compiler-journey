@@ -46,7 +46,7 @@ class Evaluator:
         # Unary operator
         if isinstance(node, UnaryOpNode):
 
-            value = self.visit(node.operand)
+            value = self.visit(node.expr)
 
             if node.op == "-":
                 return -value
