@@ -61,6 +61,7 @@ class Evaluator:
             left = self.visit(node.left)
             right = self.visit(node.right)
 
+            # Arithmetic
             if node.op == "+":
                 return left + right
 
@@ -76,6 +77,25 @@ class Evaluator:
                     raise RuntimeError("Division by zero")
 
                 return left / right
+
+            # Comparison
+            if node.op == "==":
+                return left == right
+
+            if node.op == "!=":
+                return left != right
+
+            if node.op == ">":
+                return left > right
+
+            if node.op == "<":
+                return left < right
+
+            if node.op == ">=":
+                return left >= right
+
+            if node.op == "<=":
+                return left <= right
 
             raise RuntimeError(
                 f"Unknown operator '{node.op}'"

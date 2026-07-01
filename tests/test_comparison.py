@@ -16,8 +16,13 @@ tests = [
     "4 <= 2;",
     "1 + 2 == 3;",
     "10 - 5 > 2;",
+    "LET x = 10;",
+    "x > 5;",
+    "LET y = 20;",
+    "x < y;",
+    "x == y;",
 ]
 
 for test in tests:
     result, env = run(test, env)
-    print(f"{test} -> {result}")
+    print(f"{test:<15} -> {result}")
