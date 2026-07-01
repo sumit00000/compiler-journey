@@ -13,12 +13,20 @@ class TokenType(Enum):
     NUMBER = auto()
     IDENT = auto()
 
-    # Operators
+    # Arithmetic operators
     PLUS = auto()
     MINUS = auto()
     STAR = auto()
     SLASH = auto()
     EQUAL = auto()
+
+    # Comparison operators
+    EQ = auto()       # ==
+    NE = auto()       # !=
+    GT = auto()       # >
+    LT = auto()       # <
+    GTE = auto()      # >=
+    LTE = auto()      # <=
 
     # Parentheses
     LPAREN = auto()

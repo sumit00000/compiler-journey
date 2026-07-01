@@ -39,8 +39,7 @@ class Parser:
 
     def parse(self):
         """
-        Parse the entire program.
-        A program consists of multiple statements separated by ';'
+        program -> statement (';' statement)* EOF
         """
         statements = []
 
@@ -55,8 +54,8 @@ class Parser:
 
     def statement(self):
         """
-        statement -> LET IDENT = expression
-                  | expression
+        statement -> LET IDENT = comparison
+                  | comparison
         """
 
         if self.current().type == TokenType.LET:
@@ -67,11 +66,38 @@ class Parser:
 
             self.eat(TokenType.EQUAL)
 
-            value = self.expression()
+            value = self.comparison()
 
             return LetNode(name, value)
 
-        return self.expression()
+        return self.comparison()
+
+    def comparison(self):
+        """
+        comparison -> expression
+                   ((== | != | > | < | >= | <=) expression)*
+        """
+
+        node = self.expression()
+
+        while self.current().type in (
+            TokenType.EQ,
+            TokenType.NE,
+            TokenType.GT,
+            TokenType.LT,
+            TokenType.GTE,
+            TokenType.LTE,
+        ):
+
+            op = self.current().value
+
+            self.advance()
+
+            right = self.expression()
+
+            node = BinOpNode(node, op, right)
+
+        return node
 
     def expression(self):
         """
@@ -122,7 +148,7 @@ class Parser:
         factor -> NUMBER
                | IDENT
                | -factor
-               | (expression)
+               | (comparison)
         """
 
         token = self.current()
@@ -146,7 +172,7 @@ class Parser:
         if token.type == TokenType.LPAREN:
             self.advance()
 
-            node = self.expression()
+            node = self.comparison()
 
             self.eat(TokenType.RPAREN)
 

@@ -17,6 +17,11 @@ class Lexer:
             return None
         return self.text[self.pos]
 
+    def peek(self):
+        if self.pos + 1 >= len(self.text):
+            return None
+        return self.text[self.pos + 1]
+
     def advance(self):
         self.pos += 1
 
@@ -80,6 +85,8 @@ class Lexer:
 
                 continue
 
+            # Arithmetic operators
+
             if ch == "+":
                 tokens.append(Token(TokenType.PLUS, ch))
                 self.advance()
@@ -100,10 +107,50 @@ class Lexer:
                 self.advance()
                 continue
 
-            if ch == "=":
-                tokens.append(Token(TokenType.EQUAL, ch))
+            # Comparison operators
+
+            if ch == "=" and self.peek() == "=":
+                tokens.append(Token(TokenType.EQ, "=="))
+                self.advance()
                 self.advance()
                 continue
+
+            if ch == "!" and self.peek() == "=":
+                tokens.append(Token(TokenType.NE, "!="))
+                self.advance()
+                self.advance()
+                continue
+
+            if ch == ">" and self.peek() == "=":
+                tokens.append(Token(TokenType.GTE, ">="))
+                self.advance()
+                self.advance()
+                continue
+
+            if ch == "<" and self.peek() == "=":
+                tokens.append(Token(TokenType.LTE, "<="))
+                self.advance()
+                self.advance()
+                continue
+
+            if ch == ">":
+                tokens.append(Token(TokenType.GT, ">"))
+                self.advance()
+                continue
+
+            if ch == "<":
+                tokens.append(Token(TokenType.LT, "<"))
+                self.advance()
+                continue
+
+            # Assignment operator
+
+            if ch == "=":
+                tokens.append(Token(TokenType.EQUAL, "="))
+                self.advance()
+                continue
+
+            # Parentheses
 
             if ch == "(":
                 tokens.append(Token(TokenType.LPAREN, ch))
@@ -114,6 +161,8 @@ class Lexer:
                 tokens.append(Token(TokenType.RPAREN, ch))
                 self.advance()
                 continue
+
+            # Statement separator
 
             if ch == ";":
                 tokens.append(Token(TokenType.SEMICOLON, ch))
