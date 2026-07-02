@@ -8,6 +8,10 @@ from enum import Enum, auto
 class TokenType(Enum):
     # Keywords
     LET = auto()
+    IF = auto()
+    THEN = auto()
+    ELSE = auto()
+    END = auto()
 
     # Literals
     NUMBER = auto()

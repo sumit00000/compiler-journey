@@ -10,6 +10,7 @@ from mini_lang.ast_nodes import (
     UnaryOpNode,
     BinOpNode,
     LetNode,
+    IfNode,
 )
 from mini_lang.errors import RuntimeError
 
@@ -100,6 +101,19 @@ class Evaluator:
             raise RuntimeError(
                 f"Unknown operator '{node.op}'"
             )
+        
+        # IF statement
+        if isinstance(node, IfNode):
+
+            condition = self.visit(node.condition)
+
+            if condition:
+                return self.visit(node.then_branch)
+
+            if node.else_branch is not None:
+                return self.visit(node.else_branch)
+
+            return None
 
         # LET statement
         if isinstance(node, LetNode):

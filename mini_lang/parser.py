@@ -11,6 +11,7 @@ from mini_lang.ast_nodes import (
     UnaryOpNode,
     BinOpNode,
     LetNode,
+    IfNode,
 )
 from mini_lang.errors import ParserError
 
@@ -54,10 +55,13 @@ class Parser:
 
     def statement(self):
         """
-        statement -> LET IDENT = comparison
-                  | comparison
+        statement ->
+            LET IDENT = comparison
+            | IF comparison THEN statement (ELSE statement)? END
+            | comparison
         """
 
+        # LET statement
         if self.current().type == TokenType.LET:
 
             self.advance()
@@ -70,7 +74,37 @@ class Parser:
 
             return LetNode(name, value)
 
+        # IF statement
+        if self.current().type == TokenType.IF:
+            return self.if_statement()
+
         return self.comparison()
+    
+    def if_statement(self):
+        self.eat(TokenType.IF)
+
+        condition = self.comparison()
+
+        self.eat(TokenType.THEN)
+
+        then_branch = self.statement()
+
+        if self.current().type == TokenType.SEMICOLON:
+            self.advance()
+
+        else_branch = None
+
+        if self.current().type == TokenType.ELSE:
+            self.advance()
+
+            else_branch = self.statement()
+
+            if self.current().type == TokenType.SEMICOLON:
+                self.advance()
+
+        self.eat(TokenType.END)
+
+        return IfNode(condition, then_branch, else_branch)
 
     def comparison(self):
         """

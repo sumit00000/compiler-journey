@@ -78,8 +78,23 @@ class Lexer:
 
                 ident = self.read_identifier()
 
-                if ident.upper() == "LET":
+                keyword = ident.upper()
+
+                if keyword == "LET":
                     tokens.append(Token(TokenType.LET, ident))
+
+                elif keyword == "IF":
+                    tokens.append(Token(TokenType.IF, ident))
+
+                elif keyword == "THEN":
+                    tokens.append(Token(TokenType.THEN, ident))
+
+                elif keyword == "ELSE":
+                    tokens.append(Token(TokenType.ELSE, ident))
+
+                elif keyword == "END":
+                    tokens.append(Token(TokenType.END, ident))
+
                 else:
                     tokens.append(Token(TokenType.IDENT, ident))
 
